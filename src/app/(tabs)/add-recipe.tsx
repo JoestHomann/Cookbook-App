@@ -1,26 +1,23 @@
-import { Text, View } from "react-native";
+import { Href, router } from "expo-router";
 
-import { PlaceholderLink } from "@/components/PlaceholderLink";
+import { RecipeForm } from "@/components/RecipeForm";
 import { ScreenScaffold } from "@/components/ScreenScaffold";
-import { sharedStyles } from "@/utils/theme";
+import { createRecipe } from "@/data/recipeRepository";
+import { Recipe } from "@/models/Recipe";
 
 export default function AddRecipeRoute() {
+  async function handleSubmit(recipe: Recipe) {
+    await createRecipe(recipe);
+    router.replace(`/recipes/${recipe.id}` as Href);
+  }
+
   return (
     <ScreenScaffold
       eyebrow="Add Recipe"
       title="Manual recipe entry"
-      description="This tab will become the manual recipe form first, then camera and gallery extraction later."
+      description="Save a recipe with ingredients, instructions, cooking details, and tags."
     >
-      <View style={sharedStyles.panel}>
-        <Text style={sharedStyles.panelTitle}>Upcoming form</Text>
-        <Text style={sharedStyles.bodyText}>
-          WP-06 adds dynamic ingredients, instruction steps, tags, validation,
-          and SQLite saving.
-        </Text>
-        <PlaceholderLink href="/recipes/preview">
-          Open recipe preview placeholder
-        </PlaceholderLink>
-      </View>
+      <RecipeForm onSubmit={handleSubmit} submitLabel="Save recipe" />
     </ScreenScaffold>
   );
 }

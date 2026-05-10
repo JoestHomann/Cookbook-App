@@ -1,7 +1,14 @@
-import { Href, Link, useFocusEffect, useLocalSearchParams } from "expo-router";
+import {
+  Href,
+  Link,
+  router,
+  useFocusEffect,
+  useLocalSearchParams
+} from "expo-router";
 import { useCallback, useState, type ReactNode } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Image,
   Pressable,
   ScrollView,
@@ -13,7 +20,7 @@ import {
 import { ScreenScaffold } from "@/components/ScreenScaffold";
 import { StateMessage } from "@/components/StateMessage";
 import { TagRow } from "@/components/TagRow";
-import { getRecipeById } from "@/data/recipeRepository";
+import { deleteRecipe, getRecipeById } from "@/data/recipeRepository";
 import { Ingredient } from "@/models/Ingredient";
 import { Recipe } from "@/models/Recipe";
 import { colors, radii, sharedStyles, spacing } from "@/utils/theme";
@@ -38,13 +45,14 @@ function formatMeta(recipe: Recipe) {
     meta.push(`${recipe.servings} servings`);
   }
 
-  return meta.join(" · ");
+  return meta.join(" - ");
 }
 
 export default function RecipeDetailRoute() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const recipeId = Array.isArray(id) ? id[0] : id;
   const [error, setError] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [recipe, setRecipe] = useState<Recipe | null>(null);
 
@@ -74,6 +82,37 @@ export default function RecipeDetailRoute() {
       loadRecipe();
     }, [loadRecipe])
   );
+
+  function confirmDelete(recipeToDelete: Recipe) {
+    Alert.alert(
+      "Delete recipe",
+      `Delete ${recipeToDelete.title}? This cannot be undone.`,
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => handleDelete(recipeToDelete.id)
+        }
+      ]
+    );
+  }
+
+  async function handleDelete(idToDelete: string) {
+    setIsDeleting(true);
+    setError(null);
+
+    try {
+      await deleteRecipe(idToDelete);
+      router.replace("/recipes" as Href);
+    } catch (caughtError) {
+      setError(
+        caughtError instanceof Error ? caughtError.message : String(caughtError)
+      );
+    } finally {
+      setIsDeleting(false);
+    }
+  }
 
   if (isLoading) {
     return (
@@ -134,6 +173,17 @@ export default function RecipeDetailRoute() {
             <Text style={styles.primaryButtonText}>Edit</Text>
           </Pressable>
         </Link>
+        <Pressable
+          disabled={isDeleting}
+          onPress={() => confirmDelete(recipe)}
+          style={[styles.dangerButton, isDeleting ? styles.disabled : null]}
+        >
+          {isDeleting ? (
+            <ActivityIndicator color="#9b3d35" />
+          ) : (
+            <Text style={styles.dangerButtonText}>Delete</Text>
+          )}
+        </Pressable>
       </View>
 
       <View style={styles.metaPanel}>
@@ -198,6 +248,24 @@ const styles = StyleSheet.create({
   actionRow: {
     flexDirection: "row",
     gap: spacing.md
+  },
+  dangerButton: {
+    alignItems: "center",
+    borderColor: "#d89b95",
+    borderRadius: radii.button,
+    borderWidth: 1,
+    minHeight: 44,
+    justifyContent: "center",
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm
+  },
+  dangerButtonText: {
+    color: "#9b3d35",
+    fontSize: 15,
+    fontWeight: "800"
+  },
+  disabled: {
+    opacity: 0.65
   },
   heroImage: {
     aspectRatio: 16 / 10,

@@ -19,7 +19,7 @@ function formatMeta(recipe: Recipe) {
     parts.push(`${recipe.servings} servings`);
   }
 
-  return parts.join(" · ");
+  return parts.join(" - ");
 }
 
 export function RecipeCard({ recipe }: RecipeCardProps) {

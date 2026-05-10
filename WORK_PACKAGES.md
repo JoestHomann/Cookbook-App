@@ -12,9 +12,9 @@ This file tracks the implementation plan from `instructions.md` and the current 
 ## Current Project State
 
 - Planning/documentation: Done
-- App implementation: WP-05 complete
+- App implementation: WP-06 complete
 - Existing project files: Expo app scaffold, dependency manifests, `src/` structure, `instructions.md`, `WORK_PACKAGES.md`
-- Current implementation note: The Expo TypeScript foundation, four-tab placeholder app shell, data models, shared utilities, SQLite schema, repository layer, and recipe list/detail viewing flow are installed and verified. Manual recipe create/edit/delete has not been implemented yet.
+- Current implementation note: The Expo TypeScript foundation, four-tab placeholder app shell, data models, shared utilities, SQLite schema, repository layer, recipe list/detail viewing flow, and manual recipe create/edit/delete flow are installed and verified. Image attachment has not been implemented yet.
 
 ## WP-01: Project Foundation
 
@@ -202,7 +202,7 @@ Acceptance checks:
 
 ## WP-06: Manual Recipe Create, Edit, And Delete
 
-Status: Not started
+Status: Done
 
 Goal: Implement the complete manual recipe flow.
 
@@ -222,6 +222,17 @@ Deliverables:
 - Add Recipe manual form.
 - Edit Recipe screen.
 - Delete action on detail screen.
+
+Progress:
+
+- Started manual recipe create, edit, and delete work after WP-05 verification.
+- Added reusable `RecipeForm`, `IngredientInputList`, `InstructionInputList`, and selectable `TagChips` components.
+- Added validation for recipe title, at least one ingredient, at least one instruction step, numeric cooking time, numeric servings, and numeric ingredient amounts.
+- Connected the Add Recipe tab to `createRecipe()` and navigates to the saved recipe detail page.
+- Connected the Edit Recipe route to `getRecipeById()` and `updateRecipe()`.
+- Added a delete action on the recipe detail page with confirmation and navigation back to Recipes.
+- Preserved existing attached images when editing, ready for WP-07 image attachment.
+- Verified `npm run typecheck` succeeds.
 
 Acceptance checks:
 
