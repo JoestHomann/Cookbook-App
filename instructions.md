@@ -9,6 +9,8 @@ The app should have four main tabs:
 3. Grocery List
 4. Suggestions
 
+Post-MVP, add a fifth Calorie Counter tab. It should support manual calorie entry, photo-based entry from nutrition labels, and AI food picture calorie estimates after the core cookbook MVP is stable.
+
 The first goal is to build a local MVP with manual recipe creation, local storage, search/filtering, image attachment, and grocery list generation. Image-to-recipe extraction should first be implemented with mocked extraction logic. Real OCR or LLM-based image extraction can be added later.
 
 ---
@@ -767,6 +769,7 @@ Add these after the MVP:
 - Recipe sharing
 - Import from website URL
 - Meal planning calendar
+- Calorie counter tab with manual entry, nutrition label photos, and AI food picture estimates
 - Nutrition estimation
 - Favorite recipes
 - Cooked history

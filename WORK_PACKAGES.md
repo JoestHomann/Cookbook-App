@@ -12,9 +12,9 @@ This file tracks the implementation plan from `instructions.md` and the current 
 ## Current Project State
 
 - Planning/documentation: Done
-- App implementation: WP-07 complete
+- App implementation: WP-08 complete
 - Existing project files: Expo app scaffold, dependency manifests, `src/` structure, `instructions.md`, `WORK_PACKAGES.md`
-- Current implementation note: The Expo TypeScript foundation, four-tab placeholder app shell, data models, shared utilities, SQLite schema, repository layer, recipe list/detail viewing flow, manual recipe create/edit/delete flow, and image attachment flow are installed and verified. Search and tag filtering has not been implemented yet.
+- Current implementation note: The Expo TypeScript foundation, four-tab placeholder app shell, data models, shared utilities, SQLite schema, repository layer, recipe list/detail viewing flow, manual recipe create/edit/delete flow, image attachment flow, and recipe search/tag filtering are installed and verified. Grocery list generation has not been implemented yet. A post-MVP calorie counter tab has been added to the backlog.
 
 ## WP-01: Project Foundation
 
@@ -281,7 +281,7 @@ Acceptance checks:
 
 ## WP-08: Search And Tag Filtering
 
-Status: Not started
+Status: Done
 
 Goal: Add local search and multi-tag filtering to the Recipes tab.
 
@@ -297,6 +297,15 @@ Deliverables:
 - Search bar.
 - `TagChips` component.
 - Search/filter repository or service logic.
+
+Progress:
+
+- Started search and tag filtering work after WP-07.
+- Reused the existing repository search and combined query/tag filtering logic.
+- Added a search input and selectable tag chips to the Recipes tab.
+- Added filtered result counts, clear filters, and an empty state for no matching recipes.
+- Verified `npm run typecheck` succeeds.
+- Verified Expo starts and Metro responds on `http://127.0.0.1:8081/status` with `packager-status:running`.
 
 Acceptance checks:
 
@@ -417,6 +426,37 @@ Acceptance checks:
 - Suggestions tab shows recommendations.
 - Mocked image-to-recipe extraction works.
 
+## WP-13: Calorie Counter Tab
+
+Status: Not started
+
+Goal: Add a dedicated calorie counter tab after the cookbook MVP is stable.
+
+Scope:
+
+- Add a Calorie Counter tab to the app navigation.
+- Support manual calorie entry for meals and ingredients.
+- Support photo-based calorie entry from nutrition labels.
+- Support AI food picture calorie estimates.
+- Store calorie entries locally and summarize daily totals.
+- Keep AI and label extraction reviewable before saving.
+
+Deliverables:
+
+- Calorie counter tab route and navigation entry.
+- Manual calorie entry form.
+- Nutrition label photo entry flow.
+- AI food picture estimate flow.
+- Local calorie entry model and storage.
+- Daily calorie total UI.
+
+Acceptance checks:
+
+- User can add calories manually.
+- User can add calories from a nutrition label photo after review.
+- User can estimate calories from a food picture after review.
+- User can see saved calorie entries and daily totals.
+
 ## Later, Post-MVP Packages
 
 Status: Not started
@@ -428,7 +468,8 @@ These are intentionally outside the first MVP:
 - Cloud sync and user accounts.
 - Recipe sharing and URL import.
 - Meal planning calendar.
-- Nutrition estimation.
+- Calorie counter tab with manual entry, nutrition label photos, and AI food picture estimates.
+- Nutrition estimation for recipes.
 - Favorites and cooked history.
 - Better recommendations.
 - Offline OCR.
