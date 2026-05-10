@@ -332,8 +332,8 @@ export async function findGroceryItemByNameAndUnit(
     SELECT id, name, amount, unit, category, checked, sourceRecipeIds, createdAt, updatedAt
     FROM grocery_items
     WHERE groceryListId = ?
-      AND LOWER(name) = ?
-      AND LOWER(COALESCE(unit, '')) = ?
+      AND LOWER(TRIM(name)) = ?
+      AND LOWER(TRIM(COALESCE(unit, ''))) = ?
     LIMIT 1
     `,
     groceryListId,

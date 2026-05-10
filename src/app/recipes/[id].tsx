@@ -23,6 +23,7 @@ import { TagRow } from "@/components/TagRow";
 import { deleteRecipe, getRecipeById } from "@/data/recipeRepository";
 import { Ingredient } from "@/models/Ingredient";
 import { Recipe } from "@/models/Recipe";
+import { createGroceryListFromRecipe } from "@/services/groceryListService";
 import { colors, radii, sharedStyles, spacing } from "@/utils/theme";
 
 function formatIngredient(ingredient: Ingredient) {
@@ -52,6 +53,8 @@ export default function RecipeDetailRoute() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const recipeId = Array.isArray(id) ? id[0] : id;
   const [error, setError] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
+  const [isAddingToGroceryList, setIsAddingToGroceryList] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [recipe, setRecipe] = useState<Recipe | null>(null);
@@ -64,6 +67,7 @@ export default function RecipeDetailRoute() {
     }
 
     setError(null);
+    setActionError(null);
     setIsLoading(true);
 
     try {
@@ -100,17 +104,33 @@ export default function RecipeDetailRoute() {
 
   async function handleDelete(idToDelete: string) {
     setIsDeleting(true);
-    setError(null);
+    setActionError(null);
 
     try {
       await deleteRecipe(idToDelete);
       router.replace("/recipes" as Href);
     } catch (caughtError) {
-      setError(
+      setActionError(
         caughtError instanceof Error ? caughtError.message : String(caughtError)
       );
     } finally {
       setIsDeleting(false);
+    }
+  }
+
+  async function handleCreateGroceryList(recipeToAdd: Recipe) {
+    setIsAddingToGroceryList(true);
+    setActionError(null);
+
+    try {
+      await createGroceryListFromRecipe(recipeToAdd.id);
+      router.push("/grocery-list" as Href);
+    } catch (caughtError) {
+      setActionError(
+        caughtError instanceof Error ? caughtError.message : String(caughtError)
+      );
+    } finally {
+      setIsAddingToGroceryList(false);
     }
   }
 
@@ -174,6 +194,20 @@ export default function RecipeDetailRoute() {
           </Pressable>
         </Link>
         <Pressable
+          disabled={isAddingToGroceryList}
+          onPress={() => handleCreateGroceryList(recipe)}
+          style={[
+            styles.secondaryButton,
+            isAddingToGroceryList ? styles.disabled : null
+          ]}
+        >
+          {isAddingToGroceryList ? (
+            <ActivityIndicator color={colors.leaf} />
+          ) : (
+            <Text style={styles.secondaryButtonText}>Create grocery list</Text>
+          )}
+        </Pressable>
+        <Pressable
           disabled={isDeleting}
           onPress={() => confirmDelete(recipe)}
           style={[styles.dangerButton, isDeleting ? styles.disabled : null]}
@@ -185,6 +219,8 @@ export default function RecipeDetailRoute() {
           )}
         </Pressable>
       </View>
+
+      {actionError ? <Text style={styles.actionError}>{actionError}</Text> : null}
 
       <View style={styles.metaPanel}>
         {formatMeta(recipe) ? (
@@ -247,7 +283,14 @@ function Section({
 const styles = StyleSheet.create({
   actionRow: {
     flexDirection: "row",
+    flexWrap: "wrap",
     gap: spacing.md
+  },
+  actionError: {
+    color: "#9b3d35",
+    fontSize: 14,
+    fontWeight: "800",
+    lineHeight: 20
   },
   dangerButton: {
     alignItems: "center",
@@ -321,6 +364,21 @@ const styles = StyleSheet.create({
   },
   primaryButtonText: {
     color: colors.onLeaf,
+    fontSize: 15,
+    fontWeight: "800"
+  },
+  secondaryButton: {
+    alignItems: "center",
+    borderColor: colors.leaf,
+    borderRadius: radii.button,
+    borderWidth: 1,
+    minHeight: 44,
+    justifyContent: "center",
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm
+  },
+  secondaryButtonText: {
+    color: colors.leaf,
     fontSize: 15,
     fontWeight: "800"
   },

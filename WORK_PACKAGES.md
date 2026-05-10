@@ -12,9 +12,9 @@ This file tracks the implementation plan from `instructions.md` and the current 
 ## Current Project State
 
 - Planning/documentation: Done
-- App implementation: WP-08 complete
+- App implementation: WP-09 complete
 - Existing project files: Expo app scaffold, dependency manifests, `src/` structure, `instructions.md`, `WORK_PACKAGES.md`
-- Current implementation note: The Expo TypeScript foundation, four-tab placeholder app shell, data models, shared utilities, SQLite schema, repository layer, recipe list/detail viewing flow, manual recipe create/edit/delete flow, image attachment flow, and recipe search/tag filtering are installed and verified. Grocery list generation has not been implemented yet. A post-MVP calorie counter tab has been added to the backlog.
+- Current implementation note: The Expo TypeScript foundation, four-tab placeholder app shell, data models, shared utilities, SQLite schema, repository layer, recipe list/detail viewing flow, manual recipe create/edit/delete flow, image attachment flow, recipe search/tag filtering, and grocery list generation are installed and verified. Recipe suggestions have not been implemented yet. A post-MVP calorie counter tab has been added to the backlog.
 
 ## WP-01: Project Foundation
 
@@ -315,7 +315,7 @@ Acceptance checks:
 
 ## WP-09: Grocery List
 
-Status: Not started
+Status: Done
 
 Goal: Generate and manage a grocery list from recipes.
 
@@ -335,6 +335,17 @@ Deliverables:
 - Grocery list screen.
 - Grocery item component.
 - Recipe detail integration.
+
+Progress:
+
+- Started grocery list work after WP-08.
+- Added a grocery list service for creating the active grocery list from recipe ingredients.
+- Added same-name and same-unit duplicate merging with amount addition when both amounts are numeric.
+- Replaced the Grocery List tab placeholder with grouped grocery items, checkbox toggles, edit, delete, refresh, and clear checked actions.
+- Added a reusable `GroceryListItem` component.
+- Added a Create grocery list action to recipe detail pages.
+- Verified `npm run typecheck` succeeds.
+- Verified Expo starts and Metro responds on `http://127.0.0.1:8081/status` with `packager-status:running`.
 
 Acceptance checks:
 
