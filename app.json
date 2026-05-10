@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "Cookbook App",
+    "slug": "cookbook-app",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "cookbook",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "plugins": [
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Cookbook App to access your photos so you can attach recipe images.",
+          "cameraPermission": "Allow Cookbook App to access your camera so you can capture recipe photos."
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Cookbook App to access your camera so you can capture recipe photos.",
+          "microphonePermission": false,
+          "recordAudioAndroid": false
+        }
+      ],
+      "expo-sqlite"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
