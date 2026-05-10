@@ -12,13 +12,14 @@ import {
   IngredientFormValue,
   IngredientInputList
 } from "@/components/IngredientInputList";
+import { ImagePickerField } from "@/components/ImagePickerField";
 import {
   InstructionFormValue,
   InstructionInputList
 } from "@/components/InstructionInputList";
 import { TagChips } from "@/components/TagChips";
 import { Ingredient } from "@/models/Ingredient";
-import { Recipe } from "@/models/Recipe";
+import { Recipe, RecipeImage } from "@/models/Recipe";
 import { DEFAULT_RECIPE_TAGS } from "@/utils/constants";
 import { nowIso } from "@/utils/date";
 import { createId } from "@/utils/id";
@@ -98,6 +99,27 @@ function normalizeTags(tags: string[]) {
   return Array.from(new Set(tags.map(normalizeTagName).filter(Boolean)));
 }
 
+function prepareRecipeImages(
+  images: RecipeImage[],
+  recipeId: string,
+  fallbackCreatedAt: string
+) {
+  if (images.length === 0) {
+    return [];
+  }
+
+  const mainIndex = images.findIndex((image) => image.isMainImage);
+  const selectedMainIndex = mainIndex >= 0 ? mainIndex : 0;
+
+  return images.map((image, index) => ({
+    id: image.id || createId("image"),
+    recipeId,
+    uri: image.uri,
+    isMainImage: index === selectedMainIndex,
+    createdAt: image.createdAt || fallbackCreatedAt
+  }));
+}
+
 export function RecipeForm({
   initialRecipe,
   onSubmit,
@@ -118,6 +140,9 @@ export function RecipeForm({
           text: instruction
         }))
       : [createInstructionInput()]
+  );
+  const [images, setImages] = useState<RecipeImage[]>(
+    initialRecipe?.images ?? []
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>(
@@ -195,8 +220,10 @@ export function RecipeForm({
       }
 
       const timestamp = nowIso();
+      const recipeId = initialRecipe?.id ?? createId("recipe");
+      const cleanImages = prepareRecipeImages(images, recipeId, timestamp);
       const recipe: Recipe = {
-        id: initialRecipe?.id ?? createId("recipe"),
+        id: recipeId,
         title: trimmedTitle,
         description: normalizeOptionalText(description),
         ingredients: cleanIngredients,
@@ -207,7 +234,7 @@ export function RecipeForm({
         ),
         servings: parseOptionalPositiveInteger(servings, "Servings"),
         tags: normalizeTags(selectedTags),
-        images: initialRecipe?.images ?? [],
+        images: cleanImages,
         sourceType: initialRecipe?.sourceType ?? "manual",
         createdAt: initialRecipe?.createdAt ?? timestamp,
         updatedAt: timestamp
@@ -272,6 +299,11 @@ export function RecipeForm({
             />
           </View>
         </View>
+      </View>
+
+      <View style={sharedStyles.panel}>
+        <Text style={sharedStyles.panelTitle}>Images</Text>
+        <ImagePickerField images={images} onChange={setImages} />
       </View>
 
       <View style={sharedStyles.panel}>

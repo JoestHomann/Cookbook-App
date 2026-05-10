@@ -12,9 +12,9 @@ This file tracks the implementation plan from `instructions.md` and the current 
 ## Current Project State
 
 - Planning/documentation: Done
-- App implementation: WP-06 complete
+- App implementation: WP-07 complete
 - Existing project files: Expo app scaffold, dependency manifests, `src/` structure, `instructions.md`, `WORK_PACKAGES.md`
-- Current implementation note: The Expo TypeScript foundation, four-tab placeholder app shell, data models, shared utilities, SQLite schema, repository layer, recipe list/detail viewing flow, and manual recipe create/edit/delete flow are installed and verified. Image attachment has not been implemented yet.
+- Current implementation note: The Expo TypeScript foundation, four-tab placeholder app shell, data models, shared utilities, SQLite schema, repository layer, recipe list/detail viewing flow, manual recipe create/edit/delete flow, and image attachment flow are installed and verified. Search and tag filtering has not been implemented yet.
 
 ## WP-01: Project Foundation
 
@@ -243,7 +243,7 @@ Acceptance checks:
 
 ## WP-07: Image Attachment
 
-Status: Not started
+Status: Done
 
 Goal: Allow users to attach images to recipes.
 
@@ -260,6 +260,17 @@ Deliverables:
 - `ImagePickerField` component.
 - Image support in create/edit flows.
 - Image display in cards and detail screens.
+
+Progress:
+
+- Started image attachment work after WP-06.
+- Added an `ImagePickerField` component for gallery selection and camera capture.
+- Wired attached images into the shared create/edit recipe form.
+- Added image removal and main image selection controls.
+- Ensured saved image records receive the current recipe ID and exactly one main image when images exist.
+- Reused existing recipe card and detail image display support for main images and attached image viewing.
+- Verified `npm run typecheck` succeeds.
+- Verified Expo starts and Metro responds on `http://127.0.0.1:8081/status` with `packager-status:running`.
 
 Acceptance checks:
 
