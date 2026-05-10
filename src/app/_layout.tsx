@@ -1,11 +1,12 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 
+import { DatabaseGate } from "@/components/DatabaseGate";
 import { colors } from "@/utils/theme";
 
 export default function RootLayout() {
   return (
-    <>
+    <DatabaseGate>
       <Stack
         screenOptions={{
           headerStyle: { backgroundColor: colors.surface },
@@ -30,6 +31,6 @@ export default function RootLayout() {
         />
       </Stack>
       <StatusBar style="auto" />
-    </>
+    </DatabaseGate>
   );
 }
