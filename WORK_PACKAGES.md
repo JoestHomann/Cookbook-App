@@ -5,12 +5,12 @@ This file tracks the implementation plan from `instructions.md` and the current 
 ## Current Project State
 
 - Planning/documentation: Done
-- App implementation: WP-01 complete
+- App implementation: WP-02 complete
 
 ## Packages
 
 - WP-01: Project Foundation - Done
-- WP-02: Navigation And App Shell - Not started
+- WP-02: Navigation And App Shell - Done
 - WP-03: Models And Utilities - Not started
 - WP-04: SQLite Database And Repositories - Not started
 - WP-05: Recipe List And Detail - Not started
