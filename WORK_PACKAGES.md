@@ -12,9 +12,9 @@ This file tracks the implementation plan from `instructions.md` and the current 
 ## Current Project State
 
 - Planning/documentation: Done
-- App implementation: WP-09 complete
+- App implementation: WP-12 complete; MVP ready for device QA
 - Existing project files: Expo app scaffold, dependency manifests, `src/` structure, `instructions.md`, `WORK_PACKAGES.md`
-- Current implementation note: The Expo TypeScript foundation, four-tab placeholder app shell, data models, shared utilities, SQLite schema, repository layer, recipe list/detail viewing flow, manual recipe create/edit/delete flow, image attachment flow, recipe search/tag filtering, and grocery list generation are installed and verified. Recipe suggestions have not been implemented yet. A post-MVP calorie counter tab has been added to the backlog.
+- Current implementation note: The Expo TypeScript foundation, four-tab app shell, data models, shared utilities, SQLite schema, repository layer, recipe list/detail viewing flow, manual recipe create/edit/delete flow, image attachment flow, recipe search/tag filtering, grocery list generation, rule-based recipe suggestions, and mocked image-to-recipe extraction flow are installed. TypeScript passes, Expo dependencies are compatible, Android export bundling passes, and Metro starts locally. Browser-based web smoke testing is not available until web dependencies such as `react-native-web` are added.
 
 ## WP-01: Project Foundation
 
@@ -356,7 +356,7 @@ Acceptance checks:
 
 ## WP-10: Suggestions
 
-Status: Not started
+Status: Done
 
 Goal: Add rule-based recipe suggestions from saved recipes.
 
@@ -373,6 +373,16 @@ Deliverables:
 - `SuggestionCard` component.
 - Suggestions screen.
 
+Progress:
+
+- Started suggestions work after WP-09.
+- Added `getSuggestedRecipes()` with rule-based scoring for repeated/common tags, quick recipes, recent recipes, and simple penalties for sparse metadata.
+- Added clear suggestion reasons, score sorting, and deterministic recency/title tie-breaking.
+- Added a reusable `SuggestionCard` component with image, title, tags, cooking metadata, score, and reason.
+- Replaced the Suggestions placeholder with a SQLite-backed list, loading, refresh, empty, and error states.
+- Verified `npm run typecheck` succeeds.
+- Verified Expo Metro responds on `http://127.0.0.1:8081/status` with `packager-status:running`.
+
 Acceptance checks:
 
 - Suggestions are generated from saved recipes.
@@ -381,7 +391,7 @@ Acceptance checks:
 
 ## WP-11: Mocked Image-To-Recipe Flow
 
-Status: Not started
+Status: Done
 
 Goal: Add the mocked camera/gallery extraction pipeline after the local MVP works.
 
@@ -401,6 +411,19 @@ Deliverables:
 - Recipe preview screen.
 - Add Recipe image extraction modes.
 
+Progress:
+
+- Started mocked image-to-recipe work after WP-10.
+- Added `extractTextFromImage(imageUri)` with mocked recipe text and input validation.
+- Added `parseRecipeFromText(rawText)` for title, ingredients, instructions, cooking time, servings, and simple ingredient categories.
+- Added `classifyRecipe(recipe)` with local rules for sweet, salty, vegetarian, vegan, quick, dessert, and spicy tags.
+- Added Manual, Camera, and Gallery modes to the Add Recipe tab.
+- Wired gallery image selection and camera capture into the mocked extraction pipeline.
+- Attached the source image to extracted recipe drafts and set extracted source types to `camera` or `screenshot`.
+- Replaced the recipe preview placeholder with an editable `RecipeForm` review screen that saves the extracted recipe.
+- Verified `npm run typecheck` succeeds.
+- Verified Expo Metro responds on `http://127.0.0.1:8081/status` with `packager-status:running`.
+
 Acceptance checks:
 
 - User can choose image-based recipe creation.
@@ -410,7 +433,7 @@ Acceptance checks:
 
 ## WP-12: MVP Acceptance Pass
 
-Status: Not started
+Status: Done
 
 Goal: Verify, polish, and stabilize the MVP.
 
@@ -426,6 +449,22 @@ Deliverables:
 - Passing verification checks where available.
 - Updated status documentation.
 - Short implementation summary.
+
+Progress:
+
+- Started MVP acceptance pass after WP-11.
+- Recreated the ignored local npm helper under `.tools/` because `npm` is not on PATH in this environment.
+- Installed dependencies with `npm ci --legacy-peer-deps` from the existing lockfile.
+- Verified `npm run typecheck` succeeds.
+- Started Expo Metro locally and verified `http://127.0.0.1:8081/status` returns `packager-status:running`.
+- Attempted an Expo web smoke test, but the project does not currently include `react-native-web`, so web rendering is not available without adding web dependencies.
+- Ran `expo install --check` and verified dependencies are SDK-compatible.
+- Ran an Android export smoke check and caught missing bundle-time dependencies.
+- Added missing `babel-preset-expo` and `expo-linking` dependencies required for Metro/Expo Router bundling.
+- Reran Android export successfully into the ignored `.logs/expo-export-android` directory.
+- Polished Add Recipe mode switching so changing between Manual, Camera, and Gallery clears stale errors and closes camera preview state.
+- Restarted Expo Metro and verified `http://127.0.0.1:8081/status` returns `packager-status:running`.
+- Native/device tap-through QA is still recommended because this desktop workspace cannot exercise Expo Go camera, gallery, and touch flows directly.
 
 Acceptance checks:
 
